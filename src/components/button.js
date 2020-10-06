@@ -49,7 +49,35 @@ export default class TextButton extends Phaser.GameObjects.Text {
         this.setBackgroundColor('#ffffff')
     }
 
+    /**
+     * 
+     * @param {string} color 
+     */
     setColorActive(color) {
         this.colorActive = color
+    }
+
+    /**
+     * Change the background color of the text when the button is active
+     * @param {string} color 
+     */
+    setBackgroundColorActive(color) {
+        this.backgroundColorActive = color
+    }
+
+    /**
+     * Change the color of the text when pointerout event is triggered
+     * @param {string} color - color to be set
+     */
+    setColorRest(color) {
+        this.colorRest = color
+    }
+
+    /**
+     * 
+     * @param {*} color 
+     */
+    setBackgroundColorRest(color) {
+        this.backgroundColorRest = color
     }
 }
