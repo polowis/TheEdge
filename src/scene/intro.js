@@ -15,9 +15,11 @@ export default class Intro extends Phaser.Scene{
         this.bg = this.add.tileSprite(0, 0, 1280, 700, 'introbg').setOrigin(0)
         this.createRainEffect()
         let centerX = this.cameras.main.worldView.x + this.cameras.main.width / 2
-        this.title = this.add.text(centerX, 200, 'THE EDGE', {fontSize: 30, fill: "red"}).setOrigin(0)
+        this.title = this.add.text(centerX - 40, 200, 'THE EDGE', {fontSize: 30, fill: "red"}).setOrigin(0)
         this.startButton = new InteractiveTextButton(this, centerX, 250, 'Start', { fill: '#0f0'}).clearAllBackgroundColor()
         this.add.existing(this.startButton)
+        this.aboutButton = new InteractiveTextButton(this, centerX - 32, 300, 'About The Edge', { fill: '#0f0'}).clearAllBackgroundColor()
+        this.add.existing(this.aboutButton)
 
     }
 
@@ -30,7 +32,7 @@ export default class Intro extends Phaser.Scene{
         this.rain.createEmitter({
             x: { min: 1, max: 1800 },
             y: 0,
-            lifespan: 1300,
+            lifespan: 1400,
             speedY: { min: 200, max: 400 },
             gravityY: 100,
             gravityX: Phaser.Math.Between(100, 200),
@@ -38,5 +40,9 @@ export default class Intro extends Phaser.Scene{
             quantity: 4,
             blendMode: 'ADD'
         });
+    }
+
+    aboutButtonAction() {
+
     }
 }
