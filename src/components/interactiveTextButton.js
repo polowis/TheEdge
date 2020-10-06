@@ -34,19 +34,19 @@ export default class InteractiveTextButton extends Phaser.GameObjects.Text {
     }
 
     listenOnHover() {
-        this.setColor('#ff0')
-        this.setBackgroundColor('#ffffff')
+        this.setColor(this.colorHover)
+        this.setBackgroundColor(this.backgroundColorHover)
         
     }
 
     listenOnRest() {
-        this.setColor('#0f0')
-        this.setBackgroundColor('#ffffff')
+        this.setColor(this.colorRest)
+        this.setBackgroundColor(this.backgroundColorRest)
     }
 
     listenOnActive() {
-        this.setColor('#0ff')
-        this.setBackgroundColor('#ffffff')
+        this.setColor(this.colorActive)
+        this.setBackgroundColor(this.backgroundColorActive)
     }
 
     /**

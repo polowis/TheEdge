@@ -16,7 +16,7 @@ export default class Intro extends Phaser.Scene{
         this.createRainEffect()
         let centerX = this.cameras.main.worldView.x + this.cameras.main.width / 2
         this.title = this.add.text(centerX, 200, 'THE EDGE', {fontSize: 30, fill: "red"}).setOrigin(0)
-        this.startButton = new InteractiveTextButton(this, centerX, 250, 'Start', { fill: '#0f0'}, {})
+        this.startButton = new InteractiveTextButton(this, centerX, 250, 'Start', { fill: '#0f0'}).clearAllBackgroundColor()
         this.add.existing(this.startButton)
 
     }
