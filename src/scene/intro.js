@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import InteractiveTextButton from '../components/InteractiveTextButton'
 
 export default class Intro extends Phaser.Scene{
     constructor() {
@@ -13,8 +14,11 @@ export default class Intro extends Phaser.Scene{
     create() {
         this.bg = this.add.tileSprite(0, 0, 1280, 700, 'introbg').setOrigin(0)
         this.createRainEffect()
-        this.title = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 200, 'THE EDGE', {fontSize: 30, fill: "red"}).setOrigin(0)
-        
+        let centerX = this.cameras.main.worldView.x + this.cameras.main.width / 2
+        this.title = this.add.text(centerX, 200, 'THE EDGE', {fontSize: 30, fill: "red"}).setOrigin(0)
+        this.startButton = new InteractiveTextButton(this, centerX, 250, 'Start', { fill: '#0f0'}, {})
+        this.add.existing(this.startButton)
+
     }
 
     update() {
