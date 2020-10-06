@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 
-export default class TextButton extends Phaser.GameObjects.Text {
+export default class InteractiveTextButton extends Phaser.GameObjects.Text {
     constructor(scene, x, y, text, style, eventStyle) {
         super(scene, x, y, text, style)
 
