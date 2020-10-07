@@ -1,7 +1,18 @@
 import Phaser from 'phaser'
 
+/**
+ * Create a button that can be interacted with
+ * @param {Phaser.Scene} scene - A scene to be passed
+ * @param {integer} x - the x co ordinate of the button
+ * @param {integer} y - the y co ordinate of the button
+ * @param {string} text - the text to be displayed
+ * @param {*} style - button style {optional}
+ * @param {*} customStyle - additional style upon interacting {optional}
+ * @param {*} callback - a callback function {optional}
+ * 
+ */
 export default class InteractiveTextButton extends Phaser.GameObjects.Text {
-    constructor(scene, x, y, text, style, customStyle) {
+    constructor(scene, x, y, text, style, customStyle, callback) {
         super(scene, x, y, text, style)
 
         this.eventStyle = customStyle || {}
@@ -20,6 +31,9 @@ export default class InteractiveTextButton extends Phaser.GameObjects.Text {
         .on('pointerdown', () => this.listenOnActive() )
         .on('pointerup', () => {
             this.listenOnHover();
+            if(callback != undefined){
+                callback()
+            }
           });
     }
 

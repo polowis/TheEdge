@@ -102,6 +102,11 @@ export default class Dialog {
         this.createInnerWindow(dimensions.x, dimensions.y, dimensions.rectWidth, dimensions.rectHeight);
     }
 
+    /**
+     * Set the text in the dialog
+     * @param {string} text - text to display
+     * @param {bool} animate - true to display animation 
+     */
     setText(text, animate=true) {
         this.textHolder = text
         this.eventCounter = 0;
@@ -132,6 +137,9 @@ export default class Dialog {
         );
     }
 
+    /**
+     * Continue the dialog if hasn't finished
+     */
     continue() {
         if(this.timedEvent) {
             this.textFinished = true
@@ -143,11 +151,17 @@ export default class Dialog {
         
     }
 
+    /**
+     * Close dialog window
+     */
     closeWindow() {
         if (this.text) this.text.visible = false;
         if (this.graphics) this.graphics.visible = false;
     }
 
+    /**
+     * Animate text
+     */
     animateText() {
         this.eventCounter++
         this.text.setText(this.text.text + this.dialog[this.eventCounter - 1]);
