@@ -21,8 +21,11 @@ export default class Dialog {
         // the current text in the window
         this.text;
         this.graphics;
-        this.textHolder = ""
+        this.multiple = false;
+        this.textIndicies = 0 // the current indices of textholder if multiple text provided
+        this.textHolder = []
         this.textFinished = false
+        this.currentText = "" // the current text if multple text provided
         
 
         this.createWindow()
@@ -102,12 +105,25 @@ export default class Dialog {
         this.createInnerWindow(dimensions.x, dimensions.y, dimensions.rectWidth, dimensions.rectHeight);
     }
 
+    multipleText(msgs) {
+        this.multiple = true;
+        this.textHolder = msgs
+    }
+
     /**
      * Set the text in the dialog
      * @param {string} text - text to display
      * @param {bool} animate - true to display animation 
      */
     setText(text, animate=true) {
+        // if no text provided and no multipleText provided
+        if((text == undefined) && (!this.multiple)) {
+            throw TypeError("You must provide the text to pass through")
+        
+            // if no text provided and multipleText provided
+        } else if((text == undefined) && (this.multiple)) {
+            
+        }
         this.textHolder = text
         this.eventCounter = 0;
         this.dialog = text.split('');
