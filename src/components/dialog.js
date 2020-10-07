@@ -26,15 +26,22 @@ export default class Dialog {
         this.textHolder = []
         this.textFinished = false
         this.currentText = "" // the current text if multple text provided
+        this.canSkip = true;
         
 
         this.createWindow()
         this.scene.input.on('pointerdown', () => {
-            if(this.textFinished) {
+            
+            if((this.textFinished)) {
                 this.closeWindow()
-            } else {
-                this.continue()
-        }
+            } 
+            if(this.textHolder.length - this.textIndicies >= 1) {
+                this.continueNextDialog()
+            } 
+            if(this.canSkip){
+                this.skipDialog()
+            }
+               
         })
         
     }
@@ -105,9 +112,14 @@ export default class Dialog {
         this.createInnerWindow(dimensions.x, dimensions.y, dimensions.rectWidth, dimensions.rectHeight);
     }
 
-    multipleText(msgs) {
-        this.multiple = true;
-        this.textHolder = msgs
+    addMultipleTexts(msgs) {
+        if(Array.isArray(msgs) && msgs.length > 1) {
+            this.multiple = true;
+            this.textHolder = msgs
+        } else{
+            throw TypeError("Argument msgs must be an array and should be longer than 2. If you want to use just 1 one text, consider using setText instead")
+        }
+        
     }
 
     /**
@@ -116,19 +128,24 @@ export default class Dialog {
      * @param {bool} animate - true to display animation 
      */
     setText(text, animate=true) {
+        this.canSkip = true;
+        if (this.text) this.text.destroy();
         // if no text provided and no multipleText provided
         if((text == undefined) && (!this.multiple)) {
             throw TypeError("You must provide the text to pass through")
         
             // if no text provided and multipleText provided
         } else if((text == undefined) && (this.multiple)) {
-            
+            this.currentText = this.textHolder[this.textIndicies]
+
+        } else {
+            this.currentText = text
         }
-        this.textHolder = text
+
         this.eventCounter = 0;
-        this.dialog = text.split('');
+        this.dialog = this.currentText.split('');
         if (this.timedEvent) this.timedEvent.remove();
-        let tempText = animate ? '' : text;
+        let tempText = animate ? '' : this.currentText;
         this.addText(tempText)
 
         if (animate) {
@@ -138,7 +155,12 @@ export default class Dialog {
               callbackScope: this,
               loop: true
             });
-        } else{
+        } else {
+
+            if(this.multiple) {
+                this.textIndicies++
+            }
+            this.canSkip = false;
             this.textFinished = true
         }
     }
@@ -156,15 +178,22 @@ export default class Dialog {
     /**
      * Continue the dialog if hasn't finished
      */
-    continue() {
+    skipDialog() {
         if(this.timedEvent) {
+            this.canSkip = false
             this.textFinished = true
-            this.text.setText(this.textHolder, false)
+            this.text.setText(this.currentText, false)
             this.timedEvent.remove()
-        }
-        
-        
-        
+            if(this.multiple) {
+                this.textIndicies++
+            }
+        } 
+    }
+
+    continueNextDialog() {
+        this.textFinished = false
+        console.log(this.textHolder[this.textIndicies])
+        this.setText(this.textHolder[this.textIndicies])
     }
 
     /**
@@ -183,6 +212,11 @@ export default class Dialog {
         this.text.setText(this.text.text + this.dialog[this.eventCounter - 1]);
         if (this.eventCounter === this.dialog.length) {
             this.textFinished = true
+            this.canSkip = false;
+            if(this.multiple) {
+                this.textIndicies++
+                this.textFinished = false
+            }
             this.timedEvent.remove();
         }
     }
