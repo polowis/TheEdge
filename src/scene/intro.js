@@ -8,21 +8,21 @@ export default class Intro extends Phaser.Scene{
     }
 
     preload() {
-        this.load.image('introbg', '../../assets/background/intro.gif')
+        this.load.image('introbg', '../../assets/background/lab.gif')
         
     }
 
     create() {
-        this.bg = this.add.tileSprite(0, 0, 1280, 700, 'introbg').setOrigin(0)
+        this.bg = this.add.tileSprite(0, 0, 1280, 700, 'introbg').setOrigin(0).setScale(1.5)
         this.createRainEffect()
         let centerX = this.cameras.main.worldView.x + this.cameras.main.width / 2
-        this.title = this.add.text(centerX - 40, 200, 'THE EDGE', {fontSize: 30, fill: "red"}).setOrigin(0)
-        this.startButton = new InteractiveTextButton(this, centerX, 250, 'Start', { fill: '#0f0'}).clearAllBackgroundColor()
+        this.title = this.add.text(centerX - 40, 200, 'THE EDGE', {fontSize: 40, fill: "red"}).setOrigin(0)
+        this.startButton = new InteractiveTextButton(this, centerX + 20, 250, 'Start', { fill: '#0f0'}).clearAllBackgroundColor()
         this.add.existing(this.startButton)
-        this.aboutButton = new InteractiveTextButton(this, centerX - 32, 300, 'About The Edge', { fill: '#0f0'}).clearAllBackgroundColor()
+        this.aboutButton = new InteractiveTextButton(this, centerX - 12, 300, 'About The Edge', { fill: '#0f0'}).clearAllBackgroundColor()
         this.add.existing(this.aboutButton)
         this.dialog = new Dialog(this)
-        this.dialog.setText("hello")
+        this.dialog.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. sadsfsdas")
         
 
     }
