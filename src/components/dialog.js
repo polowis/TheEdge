@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+
 export default class Dialog {
     constructor(scene, opts) {
         if (!opts) opts = {};
@@ -41,6 +41,11 @@ export default class Dialog {
         return this.scene.sys.game.config.height;
     }
 
+    /**
+     * Calculate window dimension of the box to display
+     * @param {*} width 
+     * @param {*} height 
+     */
     calculateWindowDimensions(width, height) {
         let x = this.padding;
         let y = height - this.windowHeight - this.padding;
@@ -54,16 +59,29 @@ export default class Dialog {
         };
     }
 
+    /**
+     * Create the box to store text
+     */
     createInnerWindow(x, y, rectWidth, rectHeight) {
         this.graphics.fillStyle(this.windowColor, this.windowAlpha);
         this.graphics.fillRect(x + 1, y + 1, rectWidth - 1, rectHeight - 1);
     }
        
+    /**
+     * Create an outer box that wraps inner box
+     * @param {*} x 
+     * @param {*} y 
+     * @param {*} rectWidth 
+     * @param {*} rectHeight 
+     */
     createOuterWindow(x, y, rectWidth, rectHeight) {
         this.graphics.lineStyle(this.borderThickness, this.borderColor, this.borderAlpha);
         this.graphics.strokeRect(x, y, rectWidth, rectHeight);
     }
 
+    /**
+     * Create a dialog box
+     */
     createWindow() {
         let gameHeight = this.getGameHeight();
         let gameWidth = this.getGameWidth();
