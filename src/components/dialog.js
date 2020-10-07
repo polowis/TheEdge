@@ -69,7 +69,7 @@ export default class Dialog {
         let gameWidth = this.getGameWidth();
         let dimensions = this.calculateWindowDimensions(gameWidth, gameHeight);
         this.graphics = this.scene.add.graphics()
-        this._createOuterWindow(dimensions.x, dimensions.y, dimensions.rectWidth, dimensions.rectHeight);
-        this._createInnerWindow(dimensions.x, dimensions.y, dimensions.rectWidth, dimensions.rectHeight);
+        this.createOuterWindow(dimensions.x, dimensions.y, dimensions.rectWidth, dimensions.rectHeight);
+        this.createInnerWindow(dimensions.x, dimensions.y, dimensions.rectWidth, dimensions.rectHeight);
     }
 }
