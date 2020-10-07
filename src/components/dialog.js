@@ -20,9 +20,19 @@ export default class Dialog {
         this.visible = true;
         // the current text in the window
         this.text;
+        this.graphics;
         this.textHolder = ""
+        this.textFinished = false
+        
 
         this.createWindow()
+        this.scene.input.on('pointerdown', () => {
+            if(this.textFinished) {
+                this.closeWindow()
+            } else {
+                this.continue()
+        }
+        })
         
     }
 
@@ -107,6 +117,8 @@ export default class Dialog {
               callbackScope: this,
               loop: true
             });
+        } else{
+            this.textFinished = true
         }
     }
 
@@ -120,15 +132,27 @@ export default class Dialog {
         );
     }
 
+    continue() {
+        if(this.timedEvent) {
+            this.textFinished = true
+            this.text.setText(this.textHolder, false)
+            this.timedEvent.remove()
+        }
+        
+        
+        
+    }
+
+    closeWindow() {
+        if (this.text) this.text.visible = false;
+        if (this.graphics) this.graphics.visible = false;
+    }
+
     animateText() {
         this.eventCounter++
-        this.scene.input.on('pointerdown', () => {
-            this.text.setText(this.textHolder)
-            this.timedEvent.remove()
-            return
-        })
         this.text.setText(this.text.text + this.dialog[this.eventCounter - 1]);
         if (this.eventCounter === this.dialog.length) {
+            this.textFinished = true
             this.timedEvent.remove();
         }
     }
