@@ -90,4 +90,16 @@ export default class Dialog {
         this.createOuterWindow(dimensions.x, dimensions.y, dimensions.rectWidth, dimensions.rectHeight);
         this.createInnerWindow(dimensions.x, dimensions.y, dimensions.rectWidth, dimensions.rectHeight);
     }
+
+    setText(text) {
+ 
+        let x = this.padding + 10;
+        let y = this.getGameHeight() - this.windowHeight - this.padding + 10;
+
+        this.scene.add.text(x, y, text,
+            {
+                wordWrap: { width: this.getGameWidth() - (this.padding * 2) - 25 }
+            }
+        );
+    }
 }

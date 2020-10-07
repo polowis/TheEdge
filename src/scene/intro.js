@@ -21,7 +21,9 @@ export default class Intro extends Phaser.Scene{
         this.add.existing(this.startButton)
         this.aboutButton = new InteractiveTextButton(this, centerX - 32, 300, 'About The Edge', { fill: '#0f0'}).clearAllBackgroundColor()
         this.add.existing(this.aboutButton)
-        new Dialog(this)
+        this.dialog = new Dialog(this)
+        this.dialog.setText("hello")
+        
 
     }
 
