@@ -17,7 +17,7 @@ export default class Intro extends Phaser.Scene{
         this.createRainEffect()
         let centerX = this.cameras.main.worldView.x + this.cameras.main.width / 2
         this.title = this.add.text(centerX - 40, 200, 'THE EDGE', {fontSize: 40, fill: "red"}).setOrigin(0)
-        this.startButton = new InteractiveTextButton(this, centerX + 20, 250, 'Start', { fill: '#0f0'}).clearAllBackgroundColor()
+        this.startButton = new InteractiveTextButton(this, centerX + 20, 250, 'Start', { fill: '#0f0'}, {}, () => this.startButtonAction()).clearAllBackgroundColor()
         this.add.existing(this.startButton)
         this.aboutButton = new InteractiveTextButton(this, centerX - 12, 300, 'About The Edge', { fill: '#0f0'}, {}, () => this.aboutButtonAction()).clearAllBackgroundColor()
         this.add.existing(this.aboutButton)
@@ -47,6 +47,12 @@ export default class Intro extends Phaser.Scene{
 
     aboutButtonAction() {
         this.dialog = new Dialog(this)
-        this.dialog.setText("The Edge is an infectious disease simulation. Click anywhere on the screen to skip the dialog. Hope you will enjoy the game")
+        this.dialog.setText("The Edge is an infectious disease simulation. " +
+            "Click anywhere on the screen to skip the dialog. Hope you will enjoy the game. " +
+            "Any asset from the game is permitted to reuse. The Edge is under MIT license")
+    }
+
+    startButtonAction() {
+        this.scene.start('beginStory')
     }
 }

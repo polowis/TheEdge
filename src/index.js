@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import Intro from './scene/intro'
+import beginStory from './scene/beginStory'
 
 const config = {
     type: Phaser.AUTO,
@@ -15,6 +16,6 @@ const config = {
     input: {
       activePointers: 3, // 2 is default for mouse + pointer, +1 is required for dual touch
     },
-    scene: [Intro]
+    scene: [Intro, beginStory]
 }
 const game = new Phaser.Game(config)
