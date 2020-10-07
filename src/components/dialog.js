@@ -20,6 +20,7 @@ export default class Dialog {
         this.visible = true;
         // the current text in the window
         this.text;
+        this.textHolder = ""
 
         this.createWindow()
         
@@ -91,15 +92,44 @@ export default class Dialog {
         this.createInnerWindow(dimensions.x, dimensions.y, dimensions.rectWidth, dimensions.rectHeight);
     }
 
-    setText(text) {
- 
+    setText(text, animate=true) {
+        this.textHolder = text
+        this.eventCounter = 0;
+        this.dialog = text.split('');
+        if (this.timedEvent) this.timedEvent.remove();
+        let tempText = animate ? '' : text;
+        this.addText(tempText)
+
+        if (animate) {
+            this.timedEvent = this.scene.scene.scene.time.addEvent({
+              delay: 150 - (this.dialogSpeed * 30),
+              callback: this.animateText,
+              callbackScope: this,
+              loop: true
+            });
+        }
+    }
+
+    addText(text) {
         let x = this.padding + 10;
         let y = this.getGameHeight() - this.windowHeight - this.padding + 10;
-
-        this.scene.add.text(x, y, text,
+        this.text = this.scene.add.text(x, y, text,
             {
                 wordWrap: { width: this.getGameWidth() - (this.padding * 2) - 25 }
             }
         );
+    }
+
+    animateText() {
+        this.eventCounter++
+        this.scene.input.on('pointerdown', () => {
+            this.text.setText(this.textHolder)
+            this.timedEvent.remove()
+            return
+        })
+        this.text.setText(this.text.text + this.dialog[this.eventCounter - 1]);
+        if (this.eventCounter === this.dialog.length) {
+            this.timedEvent.remove();
+        }
     }
 }
