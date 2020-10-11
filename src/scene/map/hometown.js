@@ -6,14 +6,16 @@ export default class Hometown extends Phaser.Scene {
         this.debug = false
     }
     preload() {
-        this.load.image('market', '../../../assets/tilemap/tilesprire/market.png')
-        this.load.image('country_tileset2', '../../../assets/tilemap/tilesprire/country_tileset2.png')
-        this.load.image('tileset', '../../../assets/tilemap/tilesprire/tilehousea3.png')
-        this.load.image('contry_tileset1', '../../../assets/tilemap/tilesprire/tileset.png')
-        this.load.image('tileset1', '../../../assets/tilemap/tilesprire/tileset1.png')
-        this.load.image('water_tileset', '../../../assets/tilemap/tilesprire/[A]Water_pipo.png')
-        this.load.tilemapTiledJSON('map', '../../../assets/tilemap/town.json')
-        this.load.spritesheet('player', '../../../assets/tilemap/tilesprire/citizen6.png', { frameWidth: 32, frameHeight: 32 })
+        this.load.image('market', '../../../assets/tilemap/tilesprite/market.png')
+        this.load.image('country_tileset2', '../../../assets/tilemap/tilesprite/country_tileset2.png')
+        this.load.image('tileset', '../../../assets/tilemap/tilesprite/tilehousea3.png')
+        this.load.image('contry_tileset1', '../../../assets/tilemap/tilesprite/tileset.png')
+        this.load.image('tileset1', '../../../assets/tilemap/tilesprite/tileset1.png')
+        this.load.image('water_tileset', '../../../assets/tilemap/tilesprite/[A]Water_pipo.png')
+        this.load.image('futuristic_a4', '../../../assets/tilemap/tilesprite/futuristic_a4.png')
+        this.load.image('futuristic_a5', '../../../assets/tilemap/tilesprite/futuristic_a5.png')
+        this.load.tilemapTiledJSON('map', '../../../assets/tilemap/Town.json')
+        this.load.spritesheet('player', '../../../assets/tilemap/tilesprite/citizen6.png', { frameWidth: 32, frameHeight: 32 })
 
     }
 
@@ -25,9 +27,11 @@ export default class Hometown extends Phaser.Scene {
         const modern1 = map.addTilesetImage("country_tileset2", 'country_tileset2')
         const tilehousea3 = map.addTilesetImage("tileset", 'tileset')
         const water = map.addTilesetImage("water_tileset", 'water_tileset')
+        const future5 = map.addTilesetImage("futuristic_a5", 'futuristic_a5')
+        const future4 = map.addTilesetImage("futuristic_a4", 'futuristic_a4')
         this.loadPlayerAnimation()
 
-        let all_tileset = [tileset, tileset1, market, modern1, tilehousea3, water]
+        let all_tileset = [tileset, tileset1, market, modern1, tilehousea3, water, future4, future5]
         const lowerLayer = map.createDynamicLayer("Lower Layer", all_tileset, 0, 0)
         const WorldLayer = map.createDynamicLayer('World Layer', all_tileset, 0, 0)
         const UpperLayer = map.createDynamicLayer("Upper Layer", all_tileset, 0, 0)  
@@ -38,7 +42,7 @@ export default class Hometown extends Phaser.Scene {
         this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player')
         UpperLayer.setDepth(20)
         TopLayer.setDepth(30)
-        camera.setZoom(1)
+        camera.setZoom(1.2)
         
         
         
