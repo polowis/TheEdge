@@ -11,8 +11,8 @@ export default class Hometown extends Phaser.Scene {
         this.load.image('contry_tileset1', '../../../assets/tilemap/tilesprire/tileset.png')
         this.load.image('tileset1', '../../../assets/tilemap/tilesprire/tileset1.png')
         this.load.image('water_tileset', '../../../assets/tilemap/tilesprire/[A]Water_pipo.png')
-        this.load.image('modern1', '../../../assets/tilemap/tilesprire/modern1.png')
         this.load.tilemapTiledJSON('map', '../../../assets/tilemap/town.json')
+        this.load.spritesheet('player', '../../../assets/tilemap/tilesprire/citizen6.png', { frameWidth: 48, frameHeight: 48 })
 
     }
 
@@ -24,6 +24,7 @@ export default class Hometown extends Phaser.Scene {
         const modern1 = map.addTilesetImage("country_tileset2", 'country_tileset2')
         const tilehousea3 = map.addTilesetImage("tileset", 'tileset')
         const water = map.addTilesetImage("water_tileset", 'water_tileset')
+        this.loadPlayerAnimation()
 
         let all_tileset = [tileset, tileset1, market, modern1, tilehousea3, water]
         const lowerLayer = map.createDynamicLayer("Lower Layer", all_tileset, 0, 0)
@@ -32,17 +33,23 @@ export default class Hometown extends Phaser.Scene {
         const TopLayer = map.createDynamicLayer("Top Layer", all_tileset, 0, 0)  
 
         const camera = this.cameras.main;
+        const spawnPoint = map.findObject("Object Layer 1",obj => obj.name == "Spawn point");
+        this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player')
+        
+        
+        
 
-        const cursor = this.input.keyboard.createCursorKeys();
+        
+        /*
         this.controls = new Phaser.Cameras.Controls.FixedKeyControl({
             camera: camera,
-            left: cursor.left,
-            right: cursor.right,
-            up: cursor.up,
-            down: cursor.down,
+            left: this.cursor.left,
+            right: this.cursor.right,
+            up: this.cursor.up,
+            down: this.cursor.down,
             speed: 1
-        })
-
+        })*/
+        camera.startFollow(this.player)
         camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
 
         WorldLayer.setCollisionByProperty({collides: true})
@@ -52,10 +59,48 @@ export default class Hometown extends Phaser.Scene {
             collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
             faceColor: new Phaser.Display.Color(40, 39, 37, 255)
         })
+        
+
+        
     }
 
     update(time, delta) {
-        this.controls.update(delta)
+        //const prevVelocity = this.player.body.velocity.clone();
+        this.player.body.setVelocity(0);
+
+        const cursor = this.input.keyboard.createCursorKeys();
+        // Horizontal movement
+        if (cursor.left.isDown) {
+            this.player.body.velocity.x = -100;
+            
+        } else if (cursor.right.isDown) {
+            this.player.body.velocity.x = 100;
+           
+        }
+
+        // Vertical movement
+        if (cursor.up.isDown) {
+            this.player.body.velocity.y = -100;
+            
+        } else if (cursor.down.isDown) {
+            this.player.body.velocity.y = 100;
+            
+        }
+
+        if (cursor.left.isDown) {
+            this.player.anims.play("playerLeft", true);
+          } else if (cursor.right.isDown) {
+            this.player.anims.play("playerRight", true);
+          } else if (cursor.up.isDown) {
+            this.player.anims.play("playerBack", true);
+          } else if (cursor.down.isDown) {
+            this.player.anims.play("playerFront", true);
+          } else {
+            this.player.anims.stop();
+          }
+
+        // Normalize and scale the velocity so that player can't move faster along a diagonal
+        this.player.body.velocity.normalize().scale(100);
     }
 
     loadTileset(name) {
@@ -67,6 +112,49 @@ export default class Hometown extends Phaser.Scene {
         this.map.createDynamicLayer('World Layer', tileset, 0, 0)
         this.map.createDynamicLayer("Upper Layer", tileset, 0, 0)  
         this.map.createDynamicLayer("Top Layer", tileset, 0, 0)    
+    }
+
+    loadPlayerAnimation() {
+        this.animateFront()
+        this.animateLeft()
+        this.animateRight()
+        this.animateBack()
+    }
+
+    animateFront() {
+        this.anims.create({
+            key: 'playerFront',
+            frames: this.anims.generateFrameNumbers('player', {frames: [0, 1, 2]}),
+            frameRate: 10,
+           
+        })
+    }
+
+    animateBack() {
+        this.anims.create({
+            key: 'playerBack',
+            frames: this.anims.generateFrameNumbers('player', {frames:[9, 10, 11] }),
+            frameRate: 10,
+            
+        })
+    }
+
+    animateLeft() {
+        this.anims.create({
+            key: 'playerLeft',
+            frames: this.anims.generateFrameNumbers('player', {frames: [3, 4, 5]}),
+            frameRate: 10,
+            
+        })
+    }
+
+    animateRight() {
+        this.anims.create({
+            key: 'playerRight',
+            frames: this.anims.generateFrameNumbers('player', {frames: [6, 7, 8]}),
+            frameRate: 10,
+            
+        })
     }
 
 
