@@ -3,6 +3,7 @@ import Phaser from 'phaser'
 export default class Hometown extends Phaser.Scene {
     constructor() {
         super('hometown')
+        this.debug = false
     }
     preload() {
         this.load.image('market', '../../../assets/tilemap/tilesprire/market.png')
@@ -37,6 +38,7 @@ export default class Hometown extends Phaser.Scene {
         this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player')
         UpperLayer.setDepth(20)
         TopLayer.setDepth(30)
+        camera.setZoom(1)
         
         
         
@@ -55,13 +57,17 @@ export default class Hometown extends Phaser.Scene {
         camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
 
         WorldLayer.setCollisionByProperty({collides: true})
-        const debugGraphic = this.add.graphics();
-        WorldLayer.renderDebug(debugGraphic, {
+
+        if(this.debug) {
+            const debugGraphic = this.add.graphics();
+            WorldLayer.renderDebug(debugGraphic, {
             tileColor: null,
             collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
             faceColor: new Phaser.Display.Color(40, 39, 37, 255)
         })
 
+        }
+        
         this.physics.add.collider(this.player, WorldLayer)
         
 
