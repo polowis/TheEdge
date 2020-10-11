@@ -12,7 +12,7 @@ export default class Hometown extends Phaser.Scene {
         this.load.image('tileset1', '../../../assets/tilemap/tilesprire/tileset1.png')
         this.load.image('water_tileset', '../../../assets/tilemap/tilesprire/[A]Water_pipo.png')
         this.load.tilemapTiledJSON('map', '../../../assets/tilemap/town.json')
-        this.load.spritesheet('player', '../../../assets/tilemap/tilesprire/citizen6.png', { frameWidth: 48, frameHeight: 48 })
+        this.load.spritesheet('player', '../../../assets/tilemap/tilesprire/citizen6.png', { frameWidth: 32, frameHeight: 32 })
 
     }
 
@@ -35,6 +35,8 @@ export default class Hometown extends Phaser.Scene {
         const camera = this.cameras.main;
         const spawnPoint = map.findObject("Object Layer 1",obj => obj.name == "Spawn point");
         this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player')
+        UpperLayer.setDepth(20)
+        TopLayer.setDepth(30)
         
         
         
@@ -59,6 +61,8 @@ export default class Hometown extends Phaser.Scene {
             collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
             faceColor: new Phaser.Display.Color(40, 39, 37, 255)
         })
+
+        this.physics.add.collider(this.player, WorldLayer)
         
 
         
