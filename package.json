@@ -27,7 +27,9 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "easystarjs": "^0.4.3",
     "gh-pages": "^3.1.0",
+    "pathfinding": "^0.4.18",
     "phaser": "^3.22.0"
   }
 }
