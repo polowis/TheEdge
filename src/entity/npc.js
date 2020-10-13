@@ -8,10 +8,11 @@ const name = ['Alice', 'Bob', 'Charlie', 'Delta',
             'Noland', 'Echo', 'Kiara', 'Foxtrot', 'Scralet',
             'Whiskey', 'Sierra', 'Papa', 'Victor', 'Mike', 'Tango',
             'Romeo', 'Aria', 'Cecilia', 'Cecilion', 'Charlotte', 'Anabella',
-            'Grock', 'Rebecca', 'Hylos', 'Tesla', 'Woolies', 'Coles'
+            'Grock', 'Rebecca', 'Hylos', 'Tesla', 'Woolies', 'Coles', 'Selena',
+            'Thamuz', 'Chou', 'Ouvel', 'Larkas'
         ]
 const charlist = ['char1', 'char2', 'char3', 'char4', 'char5', 'char6', 'char7', 'char8']
-const npcspritesheet = ['citizen1', 'citizen2']
+
 const npc = {
     "citizen1" :{
         "char1": {
@@ -172,7 +173,7 @@ const npc = {
 }
 export default class NPC extends Character {
     constructor(scene, x, y, key, mapGrid, walkableGrid, finder, map) {
-        super(scene, x, y, key)
+        super(scene, x, y, key, 'k')
         this.name = name[Math.floor(Math.random() * name.length)]
         this.spritesheetName = key
         this.spriteNumber = charlist[Math.floor(Math.random() * charlist.length)]
@@ -191,9 +192,15 @@ export default class NPC extends Character {
         this.map = map;
         this.finder = finder;
         this.walkableGrid = walkableGrid;
+        this.displayName = this.scene.add.text((this.x - this.width * 1.4), (this.y - (this.height / 2) - 10), this.name, {fontSize: '10px'});
         this.updateDestination()
         
         
+    }
+
+    showDisplayName() {
+        this.displayName.x = this.x - (this.displayName.width / 2);
+        this.displayName.y = this.y - (this.height / 2) - 10;
     }
 
     setMap(map) {
@@ -202,6 +209,7 @@ export default class NPC extends Character {
     }
 
     move() {
+        this.showDisplayName()
         if(Math.floor(Math.random() * 20) === 0)
             this.updateDestination();
             
