@@ -1,4 +1,7 @@
 import Phaser from 'phaser'
+import NPC from '../../entity/npc'
+import PF from 'pathfinding'
+import tiledata from './data/hometowndata.js'
 
 export default class Hometown extends Phaser.Scene {
     constructor() {
@@ -6,16 +9,12 @@ export default class Hometown extends Phaser.Scene {
         this.debug = false
     }
     preload() {
-        this.load.image('market', '../../../assets/tilemap/tilesprite/market.png')
-        this.load.image('country_tileset2', '../../../assets/tilemap/tilesprite/country_tileset2.png')
-        this.load.image('tileset', '../../../assets/tilemap/tilesprite/tilehousea3.png')
-        this.load.image('contry_tileset1', '../../../assets/tilemap/tilesprite/tileset.png')
-        this.load.image('tileset1', '../../../assets/tilemap/tilesprite/tileset1.png')
-        this.load.image('water_tileset', '../../../assets/tilemap/tilesprite/[A]Water_pipo.png')
-        this.load.image('futuristic_a4', '../../../assets/tilemap/tilesprite/futuristic_a4.png')
-        this.load.image('futuristic_a5', '../../../assets/tilemap/tilesprite/futuristic_a5.png')
+        this.loadTileset()
         this.load.tilemapTiledJSON('map', '../../../assets/tilemap/Town.json')
         this.load.spritesheet('player', '../../../assets/tilemap/tilesprite/citizen6.png', { frameWidth: 32, frameHeight: 32 })
+        this.load.spritesheet('citizen1', '../../../assets/tilemap/tilesprite/citizen1.png', { frameWidth: 32, frameHeight: 32 })
+        this.load.spritesheet('citizen2', '../../../assets/tilemap/tilesprite/citizen2.png', { frameWidth: 32, frameHeight: 32 })
+        this.load.spritesheet('citizen4', '../../../assets/tilemap/tilesprite/citizen4.png', { frameWidth: 32, frameHeight: 32 })
 
     }
 
@@ -38,12 +37,53 @@ export default class Hometown extends Phaser.Scene {
         const TopLayer = map.createDynamicLayer("Top Layer", all_tileset, 0, 0)  
 
         const camera = this.cameras.main;
+        this.grid = []
+        //console.log(lowerLayer.getTileAt(307, 199))
+        //finder.setGrid(map.layers[0].data);
+        this.walkableGrid = []
+
+        
+        for(let y = 0; y < map.height; y++){
+            let col = [];
+            for(let x = 0; x < map.width; x++) {
+                this.walkableGrid.push({xLoc: x, yLoc: y});
+                col.push(0);
+            }
+           
+            this.grid.push(col);       
+        }
+        
+
+        WorldLayer.forEachTile(tile => {
+            if(tile.properties.collides) {
+                this.grid[tile.y][tile.x] = 1
+                this.walkableGrid.filter(grid => {
+                    return grid.xLoc != tile.x && grid.yLoc != tile.y 
+                })
+                //this.walkableGrid[tile.y].splice(tile.x, 1)
+            } 
+
+        })
+
+
+
+        const pf = new PF.Grid(this.grid)
+        const finder = new PF.AStarFinder()
+
+        
+
         const spawnPoint = map.findObject("Object Layer 1",obj => obj.name == "Spawn point");
         this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'player')
         UpperLayer.setDepth(20)
         TopLayer.setDepth(30)
         camera.setZoom(1.2)
+
+        this.npcs = []
+        this.numberOfCitizen = 300
+
+
         
+    
         
         
 
@@ -59,8 +99,11 @@ export default class Hometown extends Phaser.Scene {
         })*/
         camera.startFollow(this.player)
         camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
+        
+       
 
         WorldLayer.setCollisionByProperty({collides: true})
+       
 
         if(this.debug) {
             const debugGraphic = this.add.graphics();
@@ -69,10 +112,19 @@ export default class Hometown extends Phaser.Scene {
             collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
             faceColor: new Phaser.Display.Color(40, 39, 37, 255)
         })
-
+        
+        
+        
         }
         
         this.physics.add.collider(this.player, WorldLayer)
+        this.physics.add.collider(this.npcs, WorldLayer)
+        this.physics.overlap(this.npcs, WorldLayer, () => {
+            this.npcs.forEach(npc => {
+                npc.body.setVelocity(0)
+                npc.updateDestination()
+            })
+        })
         
 
         
@@ -81,6 +133,9 @@ export default class Hometown extends Phaser.Scene {
     update(time, delta) {
         //const prevVelocity = this.player.body.velocity.clone();
         this.player.body.setVelocity(0);
+        this.npcs.forEach(npc => {
+            npc.move()
+        })
 
         const cursor = this.input.keyboard.createCursorKeys();
         // Horizontal movement
@@ -115,10 +170,34 @@ export default class Hometown extends Phaser.Scene {
 
         // Normalize and scale the velocity so that player can't move faster along a diagonal
         this.player.body.velocity.normalize().scale(100);
+        
+       
     }
 
-    loadTileset(name) {
-        return '../../../assets/tilesprire' + name
+    loadGridMap(map) {
+        
+        return new Promise((resolve, reject) => {
+            for(let y = 0; y < map.height; y++){
+                let col = [];
+                for(let x = 0; x < map.width; x++) {
+                   
+                    col.push(0);
+                }
+                this.grid.push(col);       
+            }
+            resolve(grid)
+        })
+    }
+    
+    loadNPCs() {
+        for(let citizen = 0; citizen <= this.numberOfCitizen; citizen++){
+            let spawn = this.walkableGrid[Math.floor(Math.random() * this.walkableGrid.length)]
+            const npcspritesheet = ['citizen1', 'citizen2', 'citizen4']
+            let npc = new NPC(this, spawn.xLoc * 32, spawn.yLoc * 32, npcspritesheet[Math.floor(Math.random() * npcspritesheet.length)], this.grid, this.walkableGrid, finder, map)
+            //console.log('generate npc at:', spawn.x, spawn.y)
+            npc.generateAnimation()
+            this.npcs.push(npc)
+        }
     }
 
     createLayers(tileset) {
@@ -170,6 +249,20 @@ export default class Hometown extends Phaser.Scene {
             
         })
     }
+
+    loadTileset() {
+        this.load.image('market', '../../../assets/tilemap/tilesprite/market.png')
+        this.load.image('country_tileset2', '../../../assets/tilemap/tilesprite/country_tileset2.png')
+        this.load.image('tileset', '../../../assets/tilemap/tilesprite/tilehousea3.png')
+        this.load.image('contry_tileset1', '../../../assets/tilemap/tilesprite/tileset.png')
+        this.load.image('tileset1', '../../../assets/tilemap/tilesprite/tileset1.png')
+        this.load.image('water_tileset', '../../../assets/tilemap/tilesprite/[A]Water_pipo.png')
+        this.load.image('futuristic_a4', '../../../assets/tilemap/tilesprite/futuristic_a4.png')
+        this.load.image('futuristic_a5', '../../../assets/tilemap/tilesprite/futuristic_a5.png')
+    }
+    
+    
+    
 
 
 }
