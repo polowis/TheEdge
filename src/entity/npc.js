@@ -9,7 +9,8 @@ const name = ['Alice', 'Bob', 'Charlie', 'Delta',
             'Whiskey', 'Sierra', 'Papa', 'Victor', 'Mike', 'Tango',
             'Romeo', 'Aria', 'Cecilia', 'Cecilion', 'Charlotte', 'Anabella',
             'Grock', 'Rebecca', 'Hylos', 'Tesla', 'Woolies', 'Coles', 'Selena',
-            'Thamuz', 'Chou', 'Ouvel', 'Larkas'
+            'Thamuz', 'Chou', 'Ouvel', 'Larkas', 'Leviam', 'Zuck', 'Gin', 'Vodka',
+            'Butterfly', 'GateGuard', 'Belerick'
         ]
 const charlist = ['char1', 'char2', 'char3', 'char4', 'char5', 'char6', 'char7', 'char8']
 
